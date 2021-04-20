@@ -1,0 +1,112 @@
+:root {
+  --red: #e71d24;
+  --black: #231f20;
+  --hoverBlack: #464646;
+  --white: #fffafa;
+  font-size: 24px;
+}
+
+ul.navbar {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: sticky;
+  position: -webkit-sticky;
+  background-color: var(--black);
+  padding-left: 25vw;
+  padding-right: 25vw;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+}
+
+ul.navbar li {
+  float: left;
+}
+
+ul.navbar li a:hover:not(.active) {
+  background-color: var(--hoverBlack);
+}
+
+ul.navbar li a.active {
+  background-color: var(--red);
+}
+
+ul.navbar li a {
+  display: block;
+  color: var(--white);
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/*TODO: fix logo*/
+div.logo {
+  float: right;
+  background-position: left;
+  background-image: url(/src/svg/logo.svg);
+  background: url(/src/svg/logo.svg);
+  height: 10px;
+  width: 10px;
+}
+
+h1.header {
+  padding-right: 25vw;
+  padding-left: 25vw;
+}
+
+.contentContainer {
+  width: 50vw;
+  padding-left: 25vw;
+  padding-right: 25vw;
+}
+
+@media screen and (max-width: 890px) {
+  .contentContainer {
+    width: 100%;
+    padding: 0;
+  }
+  h1.header {
+    padding: 0;
+  }
+  ul.navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    position: sticky;
+    position: -webkit-sticky;
+    background-color: var(--black);
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+div.footer {
+  font-size: 0.8rem;
+  padding: 5px;
+  text-align: center;
+  width: 100%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  padding: 5px;
+  text-align: center;
+}
+
+tr {
+  border-style: none none solid none;
+  border-color: rgba(255, 0, 0, 0.651);
+}
