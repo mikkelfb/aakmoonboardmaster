@@ -1,7 +1,24 @@
 import React from 'react'
+import firebase from "firebase/app"
+import "firebase/database"
+import "@react-firebase/database"
+import {
+    FirebaseDatabaseNode,
+    FirebaseDatabaseTransaction,
+    FirebaseDatabaseProvider
+} from "@react-firebase/database"
 
+
+const path  = "Problems/"
 
 class EnterClimb extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {value: ''}
+    }
+
+
+
     render(){
         return(
             <div>

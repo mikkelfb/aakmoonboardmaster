@@ -32,14 +32,3 @@ function ScoreBoardTop(){
         </div>
     )
 }
-
-
-// class Scoreboard extends React.Component{
-//     render(){
-//         return(
-            
-//         )
-//     }
-// }
-
-// export default Scoreboard;

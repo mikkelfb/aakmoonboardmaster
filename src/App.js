@@ -84,7 +84,7 @@ const App = () => {
                               <Problemviewer></Problemviewer>  
                             </Route> 
                             <Route path="/">
-                              <Home signedIn = {isSignedIn}></Home>
+                              <Home></Home>
                             </Route>
                           </Switch>
                         </div>
