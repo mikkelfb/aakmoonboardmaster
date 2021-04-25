@@ -16,10 +16,6 @@ export default function Info(){
             </ul>
             <h2>Hvad koster det at deltage?</h2>
             <p>Det er gratis for alle medlemmer af Aalborg Klatreklub</p>
-            <h2>Hvad venter du på, tilmeld dig nu!</h2>
-            <button>tilmeld</button>
-            <h2>Allerede tilmeldt?</h2>
-            <button>Login</button>
         </div>
     )
 }

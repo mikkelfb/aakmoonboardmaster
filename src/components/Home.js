@@ -1,24 +1,55 @@
 import React from 'react'
 import Info from './Info'
 import UserPage from './UserPage';
+import {auth, useAuth, useUser } from 'reactfire'
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
 
-import "@react-firebase/auth"
-import {
-    IfFirebaseAuthed,
-    IfFirebaseUnAuthed,
-} from "@react-firebase/auth";
+const signOut = auth => auth.signOut().then(() => console.log('signed out'))
 
+const Login = () => {
+    const auth = useAuth;
 
-import "firebase/auth";
-export default function Home(){
+    const uiConfig = {
+        signInFlow: 'popup',
+        signInOptions: [auth.GoogleAuthProvider.PROVIDER_ID],
+        callback: {
+            signInSuccessWithAuthResult: () => false
+        }
+    }
+
     return(
-        <>
-            <IfFirebaseAuthed>
-                <UserPage></UserPage>
-            </IfFirebaseAuthed>
-            <IfFirebaseUnAuthed>
-                <Info></Info>
-            </IfFirebaseUnAuthed>
-        </>
+        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth()} />
+    )    
+}
+
+function DeafaultHome(){
+    return(
+        <div>
+            <Info></Info>
+            <h1>Hvad venter du på?</h1>
+            <p>Login her:</p>
+            <Login></Login>
+        </div>
     )
 }
+
+const LoggedInHome = ({user}) => {
+    const auth = useAuth();
+    return(
+        <div>
+            <UserPage user={user}></UserPage>
+            <button onClick={() => signOut(auth)}>Log ud</button>
+        </div>
+    )
+}
+
+
+
+export const Home = () => {
+    const {status, data: user, hasEmitted} = useUser();
+    return user ? <LoggedInHome user={user}></LoggedInHome> : <DeafaultHome></DeafaultHome>
+}
+
+
+
+
