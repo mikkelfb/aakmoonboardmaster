@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useDatabase, useDatabaseListData, useDatabaseObjectData, useUser } from 'reactfire'
 import EnterClimb from './EnterClimb'
+import { Loading } from './Loading'
+
 
 class UserPage extends React.Component {
     constructor(props) {
@@ -11,6 +13,7 @@ class UserPage extends React.Component {
         return (
             <div>
                 <p>Velkommen {this.props.user.displayName}</p>
+                <MoonBoardName></MoonBoardName>
                 <UserProblem></UserProblem>
                 <p>Du har klatret x problemer</p>
                 <button>Registrer ny klatret rute</button>
@@ -23,38 +26,89 @@ class UserPage extends React.Component {
 
 export default UserPage;
 
-/*
-class UserProblem extends React.Component {
-    constructor(props){
-        super(props);
-        this.state = {isToggleOn: false}
-        this.handleClick = this.handleClick.bind(this)
+const MoonBoardName = () => {
+    const database = useDatabase();
+    const user = useUser();
+    const path = 'User/' + user.data.uid + '/Profile'
+    const refDatabase = database.ref(path)
+    const [toggleEdit, setToggleEdit] = useState(false)
+    const { status, data: Profile } = useDatabaseObjectData(refDatabase)
+
+    if (status === 'loading') {
+        return <Loading></Loading>
     }
 
-    handleClick = () => {
-        this.setState((state) => ({
-            isToggleOn: !state.isToggleOn
-        }));
+    console.log(Profile.MoonboardUsername)
+
+    if (typeof Profile.MoonboardUsername === 'undefined') {
+        return (
+            <div>
+                Please enter moonbard username
+                <EditMoonboardUsername moonboard_username={''}></EditMoonboardUsername>
+            </div>
+        )
     }
 
-    render(){
-        if (this.state.isToggleOn === false){
-            return(
-                <div>
-                    <UProblem></UProblem>
-                </div>
-            );
-        }
-        else{
-            return(
-                <div>
-                    <UProblem></UProblem>
-                </div>
-            )
-        }
-    }
+    return (
+        <div>Moonbard username: {Profile.MoonboardUsername}</div>
+    )
 }
-*/
+
+class EditMoonboardUsername extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            Moonboard_username: props.moonboard_username
+        }
+        this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleChangeName = this.handleChangeName.bind(this)
+    }
+
+    handleSubmit = (event) => {
+        event.preventDefault()
+    }
+
+    handleChangeName = (event) => {
+        this.setState({ Moonboard_username: event.target.value });
+        event.preventDefault(event);
+    }
+
+    render() {
+        return (
+            <div>
+                <form onSubmit={this.handleSubmit}>
+                    <label>
+                        <input type="text" value={this.state.Moonboard_username} onChange={this.handleChangeName}></input>
+                    </label>
+                    <UpdateMoonBoardName moonboard_username={this.state.Moonboard_username}></UpdateMoonBoardName>
+                </form>
+            </div>
+        )
+    }
+
+}
+
+
+
+const UpdateMoonBoardName = (props) => {
+    const Moonboard_username = props.moonboard_username
+    const user = useUser()
+    const database = useDatabase();
+    const pathUser = 'User/' + user.data.uid
+    const ref = database.ref(pathUser)
+
+    const UpdateData = () => {
+        ref.set({
+            MoonboardUsername: Moonboard_username
+        })
+    }
+
+    return (
+        <button label='update' onClick={() => { UpdateData(); }}>Update</button>
+    )
+
+}
+
 
 const UserProblem = () => {
     const database = useDatabase();

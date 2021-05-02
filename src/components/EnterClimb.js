@@ -17,20 +17,17 @@ class EnterClimb extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault()
-        console.log(this.state)
         alert("Du har ændret problemet!")
         this.props.setToggleEdit(false)
     }
 
     handleChangeName = (event) => {
         this.setState({ routeName: event.target.value })
-        console.log(event.target.value)
         event.preventDefault(event);
     }
 
     handleChangeGrade = (event) => {
         this.setState({ routeGrade: event.target.value })
-        console.log(event.target.value)
         event.preventDefault();
     }
     render() {
@@ -85,7 +82,6 @@ const SubmitData = (props) => {
     const refProblems = database.ref(problemsPath)
 
     const addData = () => {
-        console.log(problemID)
         ref.set({
             Name: routeName,
             Grade: grade,
@@ -102,7 +98,6 @@ const SubmitData = (props) => {
         }
         else {
             newRef = refProblems.child(problemID)
-            console.log(newRef.toString())
         }
 
         newRef.set({
