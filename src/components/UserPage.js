@@ -1,15 +1,17 @@
-import { FirebaseDatabaseMutation } from '@react-firebase/database';
-import React from 'react'
-
+import React, { useState } from 'react'
+import { useDatabase, useDatabaseListData, useDatabaseObjectData, useUser } from 'reactfire'
 import EnterClimb from './EnterClimb'
 
-class UserPage extends React.Component{
-    render(){
-        return(
-            <div>
-                <p>Velkommen #USER!#</p>
-                <UserProblem></UserProblem>
+class UserPage extends React.Component {
+    constructor(props) {
+        super(props);
+    }
 
+    render() {
+        return (
+            <div>
+                <p>Velkommen {this.props.user.displayName}</p>
+                <UserProblem></UserProblem>
                 <p>Du har klatret x problemer</p>
                 <button>Registrer ny klatret rute</button>
                 <p>Du har stemt på problemet: </p>
@@ -21,7 +23,7 @@ class UserPage extends React.Component{
 
 export default UserPage;
 
-
+/*
 class UserProblem extends React.Component {
     constructor(props){
         super(props);
@@ -39,40 +41,61 @@ class UserProblem extends React.Component {
         if (this.state.isToggleOn === false){
             return(
                 <div>
-                    <p>Du har sat problemet: </p>
-                    <button onClick={this.handleClick}>        
-                        Ændre problemet
-                    </button>
+                    <UProblem></UProblem>
                 </div>
             );
         }
         else{
             return(
                 <div>
-                    <EnterClimb></EnterClimb>>
-                    <button onClick={this.handleClick}>        
-                        Gem problemet
-                    </button>
-                    
-                    <FirebaseDatabaseMutation type="push" path = {"/Problems"}>
-                        {({runMutation}) => {
-                            return(
-                                <div>
-                                    <button
-                                        data-testid = "test-push"
-                                        onClick={async () =>{
-                                            const { key } = await runMutation({ TEST: "DATA"});
-                                            this.setState({pushedKey: key})
-                                        }}>
-                                            BIGGER button
-                                    </button>
-                                </div>
-                            )
-                        }}
-
-                    </FirebaseDatabaseMutation>
+                    <UProblem></UProblem>
                 </div>
             )
         }
     }
+}
+*/
+
+const UserProblem = () => {
+    const database = useDatabase();
+    const user = useUser();
+    const path = 'User/' + user.data.uid + '/Problem'
+    const refDatabase = database.ref(path)
+    const [toggleEdit, setToggleEdit] = useState(false)
+    const { status, data: userProblem } = useDatabaseObjectData(refDatabase)
+
+
+    if (status === 'loading') {
+        return (
+            <div>Loading</div>
+        )
+    }
+    console.log(userProblem)
+    console.log(userProblem.NO_ID_FIELD)
+    console.log(userProblem.Name)
+    console.log(userProblem.Grade)
+    console.log(userProblem.ProblemID)
+    if (typeof userProblem.Name === 'undefined' && typeof userProblem.Grade === 'undefined') {
+        return (
+            <div>
+                Du har ikke registreret en rute!
+                <EnterClimb routeName={userProblem.Name} routeGrade={userProblem.Grade} setToggleEdit={setToggleEdit}></EnterClimb>
+            </div >
+        )
+    }
+
+    if (toggleEdit === false) {
+        return (
+            <div>
+                Du har sat ruten: {userProblem.Name} - {userProblem.Grade}
+                <button onClick={() => { setToggleEdit(true) }}>Ændre</button>
+            </div>
+        )
+    }
+
+    return (
+        <div>
+            <EnterClimb routeName={userProblem.Name} routeGrade={userProblem.Grade} setToggleEdit={setToggleEdit} problemID={userProblem.ProblemID}></EnterClimb>
+        </div>
+    )
 }
