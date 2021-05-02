@@ -1,14 +1,14 @@
-import React, {useState} from 'react'
-import {useDatabase, useDatabaseListData, useDatabaseObjectData, useUser} from 'reactfire'
+import React, { useState } from 'react'
+import { useDatabase, useDatabaseListData, useDatabaseObjectData, useUser } from 'reactfire'
 import EnterClimb from './EnterClimb'
 
-class UserPage extends React.Component{
-    constructor(props){
+class UserPage extends React.Component {
+    constructor(props) {
         super(props);
     }
 
-    render(){
-        return(
+    render() {
+        return (
             <div>
                 <p>Velkommen {this.props.user.displayName}</p>
                 <UserProblem></UserProblem>
@@ -56,36 +56,46 @@ class UserProblem extends React.Component {
 }
 */
 
-const UserProblem = () =>{
+const UserProblem = () => {
     const database = useDatabase();
     const user = useUser();
     const path = 'User/' + user.data.uid + '/Problem'
     const refDatabase = database.ref(path)
     const [toggleEdit, setToggleEdit] = useState(false)
-    const {status, data: userProblem} = useDatabaseObjectData(refDatabase)
+    const { status, data: userProblem } = useDatabaseObjectData(refDatabase)
 
 
-    
-    console.log(userProblem)
-
-    if (status === 'loading'){
-        return(
+    if (status === 'loading') {
+        return (
             <div>Loading</div>
         )
     }
+    console.log(userProblem)
+    console.log(userProblem.NO_ID_FIELD)
+    console.log(userProblem.Name)
+    console.log(userProblem.Grade)
+    console.log(userProblem.ProblemID)
+    if (typeof userProblem.Name === 'undefined' && typeof userProblem.Grade === 'undefined') {
+        return (
+            <div>
+                Du har ikke registreret en rute!
+                <EnterClimb routeName={userProblem.Name} routeGrade={userProblem.Grade} setToggleEdit={setToggleEdit}></EnterClimb>
+            </div >
+        )
+    }
 
-    if(toggleEdit === false){
-        return(
+    if (toggleEdit === false) {
+        return (
             <div>
                 Du har sat ruten: {userProblem.Name} - {userProblem.Grade}
-                <button onClick={()=> {setToggleEdit(true)}}>Ændre</button>
+                <button onClick={() => { setToggleEdit(true) }}>Ændre</button>
             </div>
         )
     }
 
-    return(
+    return (
         <div>
-            <EnterClimb routeName={userProblem.Name} routeGrade={userProblem.Grade} setToggleEdit={setToggleEdit}></EnterClimb>
+            <EnterClimb routeName={userProblem.Name} routeGrade={userProblem.Grade} setToggleEdit={setToggleEdit} problemID={userProblem.ProblemID}></EnterClimb>
         </div>
     )
 }
